@@ -1,15 +1,17 @@
 package lesson3.queue;
 
+import java.util.Arrays;
+
 public class QueueImpl<E> implements Queue<E> {
 
-    private static final int HEAD_DEFAULT = 0;
-    private static final int TAIL_DEFAULT = -1;
+    protected static final int HEAD_DEFAULT = 0;
+    protected static final int TAIL_DEFAULT = -1;
 
-    private final E[] data;
-    private int size;
+    protected final E[] data;
+    protected int size;
 
-    private int tail;
-    private int head;
+    protected int tail;
+    protected int head;
 
     @SuppressWarnings("unchecked")
     public QueueImpl(int maxSize) {
@@ -46,7 +48,8 @@ public class QueueImpl<E> implements Queue<E> {
             head = HEAD_DEFAULT;
         }
 
-        E value = data[head++];
+        E value = data[head];
+        data[head++] = null;
         size--;
 
         return value;
@@ -70,5 +73,14 @@ public class QueueImpl<E> implements Queue<E> {
     @Override
     public boolean isFull() {
         return size == data.length;
+    }
+
+    @Override
+    public String toString() {
+        return '[' +
+                Arrays.toString(data) +
+                "], size=" + size +
+                ", tail=" + tail +
+                ", head=" + head;
     }
 }
