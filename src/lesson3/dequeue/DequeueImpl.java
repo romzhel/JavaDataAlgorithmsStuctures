@@ -9,7 +9,7 @@ public class DequeueImpl<E> extends QueueImpl<E> implements Dequeue<E> {
     }
 
     @Override
-    public boolean insertHead(E value) {
+    public boolean insertLeft(E value) {
         if (isFull()) {
             return false;
         }
@@ -25,7 +25,12 @@ public class DequeueImpl<E> extends QueueImpl<E> implements Dequeue<E> {
     }
 
     @Override
-    public E removeTail() {
+    public E removeLeft() {
+        return super.remove();
+    }
+
+    @Override
+    public E removeRight() {
         if (isEmpty()) {
             return null;
         }
@@ -42,7 +47,17 @@ public class DequeueImpl<E> extends QueueImpl<E> implements Dequeue<E> {
     }
 
     @Override
-    public E peekTail() {
+    public boolean insertRight(E value) {
+        return super.insert(value);
+    }
+
+    @Override
+    public E peekRight() {
         return data[tail];
+    }
+
+    @Override
+    public E peekLeft() {
+        return data[head];
     }
 }

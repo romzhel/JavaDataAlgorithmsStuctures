@@ -4,9 +4,15 @@ import lesson3.queue.Queue;
 
 public interface Dequeue<E> extends Queue<E> {
 
-    boolean insertHead(E value);
+    boolean insertLeft(E value);
 
-    E removeTail();
+    E removeLeft();
 
-    E peekTail();
+    E removeRight();
+
+    boolean insertRight(E value);
+
+    E peekRight();
+
+    E peekLeft();
 }
