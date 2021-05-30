@@ -8,10 +8,10 @@ public class DequeueTest {
     public static void main(String[] args) {
         Dequeue<Integer> dequeue = new DequeueImpl<>(5);
 
-        Consumer<Integer> insertToHead = dequeue::insertHead;
-        Consumer<Integer> insertToTail = dequeue::insert;
-        Supplier<Integer> removeFromHead = dequeue::remove;
-        Supplier<Integer> removeFromTail = dequeue::removeTail;
+        Consumer<Integer> insertToHead = dequeue::insertLeft;
+        Consumer<Integer> insertToTail = dequeue::insertRight;
+        Supplier<Integer> removeFromHead = dequeue::removeLeft;
+        Supplier<Integer> removeFromTail = dequeue::removeRight;
 
         Consumer<Integer>[] arr = new Consumer[] {insertToHead, insertToTail};
 
