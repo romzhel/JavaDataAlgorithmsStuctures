@@ -16,7 +16,15 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
 
     private int size;
     private Node<E> root;
+    private int maxLevel;
 
+    public TreeImpl() {
+        this.maxLevel = 0;
+    }
+
+    public TreeImpl(int maxLevel) {
+        this.maxLevel = maxLevel;
+    }
 
     @Override
     public boolean add(E value) {
@@ -30,11 +38,15 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
         Node<E> previous = nodeAndParent.parent;
         if (previous == null) {
             root = node;
+        } else if (maxLevel > 0 && previous.getLevel() >= maxLevel) {
+            return false;
         } else if (previous.isLeftChild(value)) {
             previous.setLeftChild(node);
         } else {
             previous.setRightChild(node);
         }
+
+        node.setLevel(previous == null ? 1 : previous.getLevel() + 1);
 
         size++;
         return true;
@@ -146,6 +158,33 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
     }
 
     @Override
+    public boolean isBalanced() {
+        int leftSubTreeHeight = getHeight(root.getLeftChild());
+        int rightSubTreeHeight = getHeight(root.getRightChild());
+
+        System.out.println("left height = " + leftSubTreeHeight);
+        System.out.println("right height = " + rightSubTreeHeight);
+
+        int maxHeight = Math.max(leftSubTreeHeight, rightSubTreeHeight);
+        int calcLog = (int) (Math.log(size) / Math.log(2));
+        System.out.println("calc log (max steps) = " + calcLog);
+
+        return Math.abs(leftSubTreeHeight - rightSubTreeHeight) <= 1 && calcLog >= maxHeight;
+    }
+
+    private int getHeight(Node<E> node) {
+        if (node == null) {
+            return 0;
+        }
+
+        int height = node.getLevel() - 1;
+        height = Math.max(height, getHeight(node.getLeftChild()));
+        height = Math.max(height, getHeight(node.getRightChild()));
+
+        return height;
+    }
+
+    @Override
     public void traverse(TraverseMode mode) {
         switch (mode) {
             case IN_ORDER -> inOrder(root);
@@ -215,7 +254,7 @@ public class TreeImpl<E extends Comparable<? super E>> implements Tree<E> {
             while (!globalStack.isEmpty()) {
                 Node<E> tempNode = globalStack.pop();
                 if (tempNode != null) {
-                    System.out.print(tempNode.getValue());
+                    System.out.print(tempNode.getValue() + ":" + tempNode.getLevel());
                     localStack.push(tempNode.getLeftChild());
                     localStack.push(tempNode.getRightChild());
                     if (tempNode.getLeftChild() != null || tempNode.getRightChild() != null) {
