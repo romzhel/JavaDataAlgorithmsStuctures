@@ -1,5 +1,7 @@
 package lesson7;
 
+import java.util.List;
+
 public interface Graph {
 
     void addVertex(String label);
@@ -19,5 +21,7 @@ public interface Graph {
      * англ. breadth-first search, BFS
      */
     void bfs(String startLabel);
+
+    List<Vertex> findShortestPath(String startLabel, String endLabel);
 
 }

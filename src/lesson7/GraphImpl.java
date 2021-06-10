@@ -141,4 +141,48 @@ public class GraphImpl implements Graph {
 
         resetVertexState();
     }
+
+    @Override
+    public List<Vertex> findShortestPath(String startLabel, String endLabel) {
+        List<Vertex> result = new LinkedList<>();
+
+        int[] prevVertexIndex = new int[vertexList.size()];
+        Arrays.fill(prevVertexIndex, -1);
+
+        int startIndex = indexOf(startLabel);
+        int endIndex = indexOf(endLabel);
+        if (startIndex == -1 || endIndex == -1) {
+            throw new IllegalArgumentException("Invalid start or end label: " + startLabel + " / " + endLabel);
+        }
+
+        Queue<Vertex> queue = new LinkedList<>();
+        Vertex vertex = vertexList.get(startIndex);
+
+        visitVertex(queue, vertex);
+        while (!queue.isEmpty()) {
+            vertex = getNearUnvisitedVertex(queue.peek());
+            if (vertex != null) {
+                int vertexIndex = indexOf(vertex.getLabel());
+                prevVertexIndex[vertexIndex] = indexOf(queue.peek().getLabel());
+
+                if (vertex.equals(vertexList.get(endIndex))) {
+                    result.add(vertex);
+                    while ((vertexIndex = prevVertexIndex[vertexIndex]) != -1) {
+                        result.add(vertexList.get(vertexIndex));
+                    }
+                    Collections.reverse(result);//на мой взгляд проще, чем использование стека
+
+                    break;
+                }
+
+                visitVertex(queue, vertex);
+            } else {
+                queue.remove();
+            }
+        }
+
+        resetVertexState();
+
+        return result;
+    }
 }
